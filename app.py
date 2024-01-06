@@ -3,6 +3,9 @@ from flask import Flask, render_template
 from api.placa import consulta_placa
 from api.predial import consulta_predial
 
+os.system("playwright install chromium")
+os.system("playwright install-deps chromium")
+
 app = Flask(__name__)
 
 
@@ -22,6 +25,4 @@ def consultaPredial(cedula):
 
 
 if __name__ == "__main__":
-    os.system("playwright install chromium")
-    os.system("playwright install-deps chromium")
     app.run()
