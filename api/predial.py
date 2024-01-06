@@ -2,22 +2,32 @@ from bs4 import BeautifulSoup
 from playwright.sync_api import sync_playwright
 from api.diccionario import generar_json_predial
 from lxml import etree
-import time
 
 
 def consulta_predial(cedula: str):
     url = "http://186.46.158.7/portal_EC/latacunga.php"
 
     with sync_playwright() as playwright:
-        browser = playwright.chromium.launch()
+        browser = playwright.chromium.launch(
+            args=[
+                "--disable-gpu",
+                "--start-maximized",
+                "--blink-settings=imagesEnabled=false",
+                "--disable-extensions",
+            ],
+        )
         page = browser.new_page()
         page.goto(url)
+
+        page.wait_for_selector("#map")
+        page.eval_on_selector("#map", "element => element.remove()")
 
         page.get_by_text("Cedula/Ruc").click()
         page.get_by_placeholder("Ingrese información").fill(cedula)
         page.get_by_text("Buscar").click()
 
-        time.sleep(1)
+        page.wait_for_selector("#prediosCiu")
+        page.wait_for_selector("#rpt_prediocatas1")
         soup = str(BeautifulSoup(page.inner_html("body"), "html.parser"))
         browser.close()
 
