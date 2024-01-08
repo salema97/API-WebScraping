@@ -1,6 +1,8 @@
+import json
+from flask import jsonify
 import requests
 from bs4 import BeautifulSoup
-from api.diccionario import generar_json_placa
+from api.JSONs import generar_json_placa
 
 
 def consulta_placa(placa: str):
@@ -16,6 +18,6 @@ def consulta_placa(placa: str):
         for td in elements:
             data.append(td.get_text())
 
-        return generar_json_placa(data)
+        return json.dumps(generar_json_placa(data))
     else:
         return {"error": "Error al conectarse al sitio web."}

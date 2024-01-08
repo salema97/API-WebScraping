@@ -1,6 +1,6 @@
 from bs4 import BeautifulSoup
 from playwright.sync_api import sync_playwright
-from api.diccionario import generar_json_predial
+from api.JSONs import generar_json_predial
 from lxml import etree
 
 
