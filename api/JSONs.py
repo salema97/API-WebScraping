@@ -2,6 +2,25 @@ import json
 import re
 
 
+def generar_json_datos(lugar, datos):
+    if len(lugar) != 0:
+        # Crear un diccionario con los datos de la lista
+        datos = {
+            "apellidos": datos[1].strip(),
+            "nombres": datos[2].strip(),
+            "cedula": datos[3].strip(),
+            "edad": datos[4].strip(),
+            "provincia": lugar[1].strip(),
+            "canton": lugar[2].strip(),
+            "parroquia": lugar[3].strip(),
+        }
+
+        # Convertir el diccionario a JSON
+        json_data = json.dumps(datos)
+
+        return json_data
+
+
 def generar_json_placa(data_list):
     if len(data_list) != 0:
         # Crear un diccionario con los datos de la lista
