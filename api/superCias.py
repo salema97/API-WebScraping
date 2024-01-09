@@ -22,7 +22,7 @@ def consulta_compania(cedula: str):
         cedula_input.press("Backspace")
         tabla_selector = ".z-comboitem-text"
 
-        page.wait_for_timeout(500)
+        page.wait_for_timeout(800)
         if page.is_visible(tabla_selector) == True:
             page.wait_for_selector(tabla_selector)
             page.click(tabla_selector)
