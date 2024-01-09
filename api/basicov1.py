@@ -1,6 +1,4 @@
-from datetime import datetime
 import json
-import time
 from bs4 import BeautifulSoup
 from playwright.sync_api import sync_playwright
 

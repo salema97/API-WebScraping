@@ -1,6 +1,6 @@
 from concurrent.futures import ThreadPoolExecutor
 import json
-from api.basicov2 import consulta_siirs
+#from api.basicov2 import consulta_siirs
 from api.predialLatacunga import consulta_predial
 from api.superCias import consulta_compania
 from api.vehiculo import consulta_cedula_vehiculo
