@@ -21,9 +21,6 @@ def consulta_cedula_vehiculo(cedula: str):
                 "puntos": td_elements[2].get_text(strip=True)
                 if len(td_elements) > 2
                 else None,
-                "cedula": td_elements[3].get_text(strip=True)
-                if len(td_elements) > 3
-                else None,
                 "tipo_licencia": td_elements[4].get_text(strip=True)
                 if len(td_elements) > 4
                 else None,

@@ -1,60 +1,38 @@
-from playwright.sync_api import sync_playwright
-from playwright_stealth import stealth_sync
-from playwright_recaptcha import recaptchav2
-from bs4 import BeautifulSoup
-from lxml import etree
+from datetime import datetime
+import json
 import time
+from bs4 import BeautifulSoup
+from playwright.sync_api import sync_playwright
 
 
-def consulta_siirs(cedula: str):
-    url = "https://siirs.registrosocial.gob.ec/pages/publico/busquedaPublica.jsf"
+def consulta_sri(cedula: str):
+    url = "https://calculadoras.trabajo.gob.ec/impedimento"
+    datos = {}
 
     with sync_playwright() as playwright:
-        try:
-            browser = playwright.firefox.launch(
-                headless=False,
-                args=[
-                    "--disable-gpu",
-                    "--start-maximized",
-                    # "--blink-settings=imagesEnabled=false",
-                    "--disable-extensions",
-                ],
-            )
-            page = browser.new_page()
-            stealth_sync(page)
-            page.goto(url)
+        browser = playwright.chromium.launch(
+            headless=True,
+            args=[
+                "--disable-gpu",
+                "--start-maximized",
+                "--blink-settings=imagesEnabled=false",
+                "--disable-extensions",
+            ],
+        )
+        page = browser.new_page()
+        page.goto(url)
 
-            with recaptchav2.SyncSolver(
-                page, capsolver_api_key="CAP-71A22A0C4D2FAE840D43FE4814DA6670"
-            ) as solver:
-                solver.solve_recaptcha(wait=True, image_challenge=True)
-                page.locator("#frmBusquedaPublica\:txtCedula").fill(cedula)
-                page.locator("#frmBusquedaPublica\:btnBuscar").click()
-                time.sleep(2)
-                page.wait_for_load_state()
-                # page.wait_for_load_state("load", timeout=10000)
-                soup = str(BeautifulSoup(page.inner_html("body"), "html.parser"))
+        page.locator("#txtNumeroDocumento").fill(cedula)
+        page.get_by_text("Buscar").click()
 
-                datos_casa = etree.HTML(soup).xpath(
-                    "//span[@class='textoResultado']/text()"
-                )
-                table_data = etree.HTML(soup).xpath("//table[@role='grid']//tr")
+        page.wait_for_selector("#txtNombreCompelto")
 
-                for row in table_data:
-                    cell_values = row.xpath(".//td/text()")
-                    if len(cell_values) >= 4 and cell_values[3].strip() == cedula:
-                        # Se encontró la fila con la cédula completa
-                        return cell_values
+        nombres_value = page.evaluate(
+            '(document.getElementById("txtNombreCompelto")).value'
+        )
+        datos["nombre"] = nombres_value.strip() if nombres_value else None
+        datos["cedula"] = cedula
 
-                return None
-        except Exception as e:
-            print(f"Error: {e}")
-            return None
-        finally:
-            if browser:
-                browser.close()
+        browser.close()
 
-
-cedula = "0550243737"
-salida = consulta_siirs(cedula)
-print(salida)
+    return json.dumps(datos)
