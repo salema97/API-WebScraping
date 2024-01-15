@@ -1,17 +1,12 @@
-from datetime import datetime
 import json
 import time
-from bs4 import BeautifulSoup
 from playwright.sync_api import sync_playwright
 
 
-def consulta_sri(cedula: str):
-    url = "https://calculadoras.trabajo.gob.ec/impedimento"
-    datos = {}
-
+def consulta_aduna(cedula: str):
+    url = "https://www.aduana.gob.ec/consultacupos/"
     with sync_playwright() as playwright:
         browser = playwright.chromium.launch(
-            headless=True,
             args=[
                 "--disable-gpu",
                 "--start-maximized",
@@ -22,17 +17,17 @@ def consulta_sri(cedula: str):
         page = browser.new_page()
         page.goto(url)
 
-        page.locator("#txtNumeroDocumento").fill(cedula)
-        page.get_by_text("Buscar").click()
+        page.click("#exampleRadios1")
+        page.locator("#txtCedula").fill(cedula)
+        page.get_by_text("Consultar").click()
+        page.wait_for_selector("#dato_cedula")
 
-        page.wait_for_selector("#txtNombreCompelto")
-
-        nombres_value = page.evaluate(
-            '(document.getElementById("txtNombreCompelto")).value'
-        )
-        datos["nombre"] = nombres_value.strip() if nombres_value else None
-        datos["cedula"] = cedula
+        ced = page.text_content("id=dato_cedula")
+        nombre = page.text_content("id=dato_nombre")
+        datos_basico = {
+            "cedula": ced,
+            "nombre": nombre,
+        }
 
         browser.close()
-
-    return json.dumps(datos)
+        return json.dumps(datos_basico)

@@ -1,5 +1,6 @@
 import os
 from flask import Flask, render_template
+from api.basico import consulta_aduna
 from api.placaANT import consulta_placa
 from api.predialLatacunga import consulta_predial
 from api.superCias import consulta_compania
@@ -34,6 +35,11 @@ def consultaPredial(cedula):
 @app.get("/consulta/superCias/<cedula>")
 def consultaCompania(cedula):
     return consulta_compania(cedula)
+
+
+@app.get("/consulta/basica/<cedula>")
+def consultaBasica(cedula):
+    return consulta_aduna(cedula)
 
 
 if __name__ == "__main__":
