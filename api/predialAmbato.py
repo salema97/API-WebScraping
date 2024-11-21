@@ -16,6 +16,8 @@ def consulta_predial(cedula: str):
                 "--start-maximized",
                 "--blink-settings=imagesEnabled=false",
                 "--disable-extensions",
+                "--no-sandbox",
+                "--disable-setuid-sandbox",
             ],
         )
 

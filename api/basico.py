@@ -12,6 +12,8 @@ def consulta_aduna(cedula: str):
                 "--start-maximized",
                 "--blink-settings=imagesEnabled=false",
                 "--disable-extensions",
+                "--no-sandbox",
+                "--disable-setuid-sandbox",
             ],
         )
         page = browser.new_page()
@@ -20,14 +22,21 @@ def consulta_aduna(cedula: str):
         page.click("#exampleRadios1")
         page.locator("#txtCedula").fill(cedula)
         page.get_by_text("Consultar").click()
-        page.wait_for_selector("#dato_cedula")
 
-        ced = page.text_content("id=dato_cedula")
-        nombre = page.text_content("id=dato_nombre")
-        datos_basico = {
-            "cedula": ced,
-            "nombre": nombre,
-        }
+        try:
+            page.wait_for_selector("#dato_cedula", timeout=10000)
+            ced = page.text_content("id=dato_cedula")
+            nombre = page.text_content("id=dato_nombre")
+
+            if not ced or not nombre:
+                datos_basico = {}
+            else:
+                datos_basico = {
+                    "cedula": ced,
+                    "nombre": nombre,
+                }
+        except:
+            datos_basico = {}
 
         browser.close()
         return json.dumps(datos_basico)

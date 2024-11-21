@@ -15,15 +15,21 @@ def consulta_cedula_vehiculo(cedula: str):
         )
         if len(td_elements) != 0:
             data = {
-                "nombre": td_elements[0].get_text(strip=True)
-                if len(td_elements) > 0
-                else None,
-                "puntos": td_elements[2].get_text(strip=True)
-                if len(td_elements) > 2
-                else None,
-                "tipo_licencia": td_elements[4].get_text(strip=True)
-                if len(td_elements) > 4
-                else None,
+                "nombre": (
+                    td_elements[0].get_text(strip=True)
+                    if len(td_elements) > 0
+                    else None
+                ),
+                "puntos": (
+                    td_elements[2].get_text(strip=True)
+                    if len(td_elements) > 2
+                    else None
+                ),
+                "tipo_licencia": (
+                    td_elements[4].get_text(strip=True)
+                    if len(td_elements) > 4
+                    else None
+                ),
                 "detalle_auto": None,  # Inicializamos a None por si no se encuentra una placa
             }
             # data_json = json.dumps(data, ensure_ascii=False, indent=4)
@@ -35,6 +41,8 @@ def consulta_cedula_vehiculo(cedula: str):
                         "--start-maximized",
                         "--blink-settings=imagesEnabled=false",
                         "--disable-extensions",
+                        "--no-sandbox",
+                        "--disable-setuid-sandbox",
                     ],
                 )
                 page = browser.new_page()

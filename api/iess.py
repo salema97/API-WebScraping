@@ -16,6 +16,8 @@ def consulta_iess(cedula: str):
                 "--start-maximized",
                 "--blink-settings=imagesEnabled=false",
                 "--disable-extensions",
+                "--no-sandbox",
+                "--disable-setuid-sandbox",
             ],
         )
         page = browser.new_page()
