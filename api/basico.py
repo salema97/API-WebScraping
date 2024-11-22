@@ -7,6 +7,7 @@ def consulta_aduna(cedula: str):
     url = "https://www.aduana.gob.ec/consultacupos/"
     with sync_playwright() as playwright:
         browser = playwright.chromium.launch(
+            headless=False,
             args=[
                 "--disable-gpu",
                 "--start-maximized",
