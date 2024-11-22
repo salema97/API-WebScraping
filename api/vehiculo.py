@@ -9,7 +9,7 @@ def consulta_cedula_vehiculo(cedula: str):
     url = f"https://consultaweb.ant.gob.ec/PortalWEB/paginas/clientes/clp_grid_citaciones.jsp?ps_tipo_identificacion=CED&ps_identificacion={cedula}"
 
     try:
-        response = requests.get(url, timeout=150)
+        response = requests.get(url, timeout=1000)
         if response.status_code == 200:
             soup = BeautifulSoup(response.content, "html.parser")
             td_elements = soup.find_all(
